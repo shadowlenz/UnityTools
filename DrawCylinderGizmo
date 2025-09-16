@@ -1,44 +1,44 @@
-		void DrawCylinderGizmo(float height, float radius, Vector3 center, Vector3 forward, Vector3 up,float sampleSize = 10 , Color gizmoColor = default)
+public void DrawCylinderGizmo(float height, float radius, Vector3 center, Vector3 forward, Vector3 up,float sampleSize = 10 , Color gizmoColor = default)
+{
+    Gizmos.color = gizmoColor;
+
+    Vector3 pointMaxHeight = (height / 2f) * up;
+
+    float rotIteration =  radius / sampleSize;
+    if (rotIteration < sampleSize*4) rotIteration = sampleSize*4; // min iteration
+
+	float percPerIteration = 1f / rotIteration;
+
+    for (int i = 0; i < rotIteration; i++)
+    {
+        float perc = (float)i * percPerIteration;
+
+        Vector3 currentDistancePoint = GetAngleDirectionByPerc(perc, forward, up) * radius;
+        Vector3 nextDistancePoint = GetAngleDirectionByPerc(perc + percPerIteration, forward, up) * radius;
+
+        //top arc lines
+        Gizmos.DrawLine(center + pointMaxHeight + currentDistancePoint, center + pointMaxHeight + nextDistancePoint);
+        //bottom arc lines
+        Gizmos.DrawLine(center - pointMaxHeight + currentDistancePoint, center - pointMaxHeight + nextDistancePoint);
+
+        if (i % sampleSize == 0)
 		{
-            Gizmos.color = gizmoColor;
+			//top radius lines
+			Gizmos.DrawLine(center + pointMaxHeight, center + pointMaxHeight + currentDistancePoint);
+			//bottom radius lines
+			Gizmos.DrawLine(center - pointMaxHeight, center - pointMaxHeight + currentDistancePoint);
 
-            Vector3 pointMaxHeight = (height / 2f) * transform.up;
+			if (height != 0)
+			{
+				//height lines
+				Gizmos.DrawLine(center + pointMaxHeight + currentDistancePoint, center - pointMaxHeight + currentDistancePoint);
+			}
+		}
+    }
+}
 
-            float rotIteration =  radius / sampleSize;
-            if (rotIteration < sampleSize*4) rotIteration = sampleSize*4; // min iteration
-
-			float percPerIteration = 1f / rotIteration;
-
-            for (int i = 0; i < rotIteration; i++)
-            {
-                float perc = (float)i * percPerIteration;
-
-                Vector3 currentDistancePoint = GetAngleDirectionByPerc(perc, forward, up) * radius;
-                Vector3 nextDistancePoint = GetAngleDirectionByPerc(perc + percPerIteration, forward, up) * radius;
-
-                //top arc lines
-                Gizmos.DrawLine(center + pointMaxHeight + currentDistancePoint, center + pointMaxHeight + nextDistancePoint);
-                //bottom arc lines
-                Gizmos.DrawLine(center - pointMaxHeight + currentDistancePoint, center - pointMaxHeight + nextDistancePoint);
-
-                if (i % sampleSize == 0)
-				{
-					//top radius lines
-					Gizmos.DrawLine(center + pointMaxHeight, center + pointMaxHeight + currentDistancePoint);
-					//bottom radius lines
-					Gizmos.DrawLine(center - pointMaxHeight, center - pointMaxHeight + currentDistancePoint);
-
-					if (height != 0)
-					{
-						//height lines
-						Gizmos.DrawLine(center + pointMaxHeight + currentDistancePoint, center - pointMaxHeight + currentDistancePoint);
-					}
-				}
-            }
-        }
-
-		Vector3 GetAngleDirectionByPerc(float perc, Vector3 forward, Vector3 up)
-		{
-            Quaternion rot = Quaternion.AngleAxis(perc * 360, up);
-            return (rot * forward);
-        }
+Vector3 GetAngleDirectionByPerc(float perc, Vector3 forward, Vector3 up)
+{
+    Quaternion rot = Quaternion.AngleAxis(perc * 360, up);
+    return (rot * forward);
+}
