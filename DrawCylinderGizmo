@@ -28,8 +28,11 @@
 					//bottom radius lines
 					Gizmos.DrawLine(center - pointMaxHeight, center - pointMaxHeight + currentDistancePoint);
 
-					//height lines
-					Gizmos.DrawLine(center + pointMaxHeight + currentDistancePoint, center - pointMaxHeight + currentDistancePoint);
+					if (height != 0)
+					{
+						//height lines
+						Gizmos.DrawLine(center + pointMaxHeight + currentDistancePoint, center - pointMaxHeight + currentDistancePoint);
+					}
 				}
             }
         }
@@ -38,4 +41,4 @@
 		{
             Quaternion rot = Quaternion.AngleAxis(perc * 360, up);
             return (rot * forward);
-    }
+        }
