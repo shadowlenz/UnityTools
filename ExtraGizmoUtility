@@ -13,7 +13,6 @@
 
                 if (showWireFrame && height != 0)
                 {
-
                     if (i % densitySample == 0 || i == rotIteration)
                     {
                         //height lines
@@ -38,25 +37,36 @@
                 Vector3 currentDistancePoint = GetAngleDirectionByPerc(perc, forward, up, degree) * radius;
                 Vector3 nextDistancePoint = GetAngleDirectionByPerc(perc + percPerIteration, forward, up, degree) * radius;
 
-                //arc lines
-                if (i < rotIteration) Gizmos.DrawLine(center + currentDistancePoint, center + nextDistancePoint);
-
-
+                //does not need to render the last iteration cause it would over shot
+                if (i < rotIteration)
+                {
+                    //arc lines
+                    Gizmos.DrawLine(center + currentDistancePoint, center + nextDistancePoint);
+                }
 
                 if (showWireFrame)
                 {
-                    if (i % densitySample == 0 || i == rotIteration) Gizmos.DrawLine(center, center + currentDistancePoint);
+                    if (i % densitySample == 0 || i == rotIteration)
+                    {
+                        //radius lines
+                        Gizmos.DrawLine(center, center + currentDistancePoint);
+                    }
                 }
 
             }
         }
 
-        static void GetCircleIteration(float radius, float degree, int densitySample, out int iteration, out float perPerc)
+        /// <summary>
+        /// provide iteration count for loop.
+        /// </summary>
+        /// <param name="densitySample">lower the number, the more it detailed the gizmo will be.</param>
+        /// <param name="percPerIteration">percentage for a single iteration.</param>
+        static void GetCircleIteration(float radius, float degree, int densitySample, out int iteration, out float percPerIteration)
         {
             iteration = (int)((radius / densitySample) * (degree / 360));
-            if (iteration < densitySample * 4) iteration = (int)(densitySample * 4); // min iteration
+            //if (iteration < densitySample * 4) iteration = (int)(densitySample * 4); // min iteration
 
-            perPerc = 1f / iteration;
+            percPerIteration = 1f / iteration;
         }
 
         static Vector3 GetAngleDirectionByPerc(float perc, Vector3 forward, Vector3 up, float degree = 360)
