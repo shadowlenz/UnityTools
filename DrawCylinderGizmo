@@ -1,64 +1,67 @@
-public void DrawCylinderGizmo(float height, float radius, Vector3 center, Vector3 forward, Vector3 up, bool showWireFrame = true, float degree=360, float sampleSize = 10)
-{
-    Vector3 pointMaxHeight = (height / 2f) * up;
-
-    GetCircleIteration(sampleSize, radius, degree, out int rotIteration, out float percPerIteration);
-    for (int i = 0; i <= rotIteration; i++)
+    public class ExtraGizmoUtility
     {
-        float perc = (float)i * percPerIteration;
-
-        Vector3 currentDistancePoint = GetAngleDirectionByPerc(perc, forward, up, degree) * radius;
-
-        if (showWireFrame && height != 0)
+        public static void DrawCylinderGizmo(float height, float radius, Vector3 center, Vector3 forward, Vector3 up, bool showWireFrame = true, float degree = 360, int densitySample = 10)
         {
-			
-			if (i % sampleSize == 0 || i == rotIteration)
-			{
-				//height lines
-				Gizmos.DrawLine(center + pointMaxHeight + currentDistancePoint, center - pointMaxHeight + currentDistancePoint);
-			}
-		}
-    }
+            Vector3 pointMaxHeight = (height / 2f) * up;
 
-	//top circle
-	DrawCircleGizmo(center + pointMaxHeight, radius, forward, up, showWireFrame, degree, sampleSize);
-	//bottom circle
-    DrawCircleGizmo(center - pointMaxHeight, radius, forward, up, showWireFrame, degree, sampleSize);
-}
-public void DrawCircleGizmo(Vector3 center, float radius, Vector3 forward, Vector3 up, bool showWireFrame = true, float degree=360, float sampleSize = 10) 
-{
-       
-	GetCircleIteration(sampleSize, radius, degree, out int rotIteration, out float percPerIteration);
-    for (int i = 0; i <= rotIteration; i++)
-    {
-        float perc = (float)i * percPerIteration;
+            GetCircleIteration(radius, degree, densitySample, out int rotIteration, out float percPerIteration);
+            for (int i = 0; i <= rotIteration; i++)
+            {
+                float perc = (float)i * percPerIteration;
 
-        Vector3 currentDistancePoint = GetAngleDirectionByPerc(perc, forward, up, degree) * radius;
-        Vector3 nextDistancePoint = GetAngleDirectionByPerc(perc + percPerIteration, forward, up, degree) * radius;
+                Vector3 currentDistancePoint = GetAngleDirectionByPerc(perc, forward, up, degree) * radius;
 
-        //arc lines
-        if (i < rotIteration)  Gizmos.DrawLine(center + currentDistancePoint, center + nextDistancePoint);
+                if (showWireFrame && height != 0)
+                {
 
+                    if (i % densitySample == 0 || i == rotIteration)
+                    {
+                        //height lines
+                        Gizmos.DrawLine(center + pointMaxHeight + currentDistancePoint, center - pointMaxHeight + currentDistancePoint);
+                    }
+                }
+            }
 
-     
-        if (showWireFrame)
-		{
-			if (i % sampleSize == 0 || i == rotIteration) Gizmos.DrawLine(center, center + currentDistancePoint);
+            //top circle
+            DrawCircleGizmo(center + pointMaxHeight, radius, forward, up, showWireFrame, degree, densitySample);
+            //bottom circle
+            DrawCircleGizmo(center - pointMaxHeight, radius, forward, up, showWireFrame, degree, densitySample);
         }
-		
+        public static void DrawCircleGizmo(Vector3 center, float radius, Vector3 forward, Vector3 up, bool showWireFrame = true, float degree = 360, int densitySample = 10)
+        {
+
+            GetCircleIteration(radius, degree, densitySample, out int rotIteration, out float percPerIteration);
+            for (int i = 0; i <= rotIteration; i++)
+            {
+                float perc = (float)i * percPerIteration;
+
+                Vector3 currentDistancePoint = GetAngleDirectionByPerc(perc, forward, up, degree) * radius;
+                Vector3 nextDistancePoint = GetAngleDirectionByPerc(perc + percPerIteration, forward, up, degree) * radius;
+
+                //arc lines
+                if (i < rotIteration) Gizmos.DrawLine(center + currentDistancePoint, center + nextDistancePoint);
+
+
+
+                if (showWireFrame)
+                {
+                    if (i % densitySample == 0 || i == rotIteration) Gizmos.DrawLine(center, center + currentDistancePoint);
+                }
+
+            }
+        }
+
+        static void GetCircleIteration(float radius, float degree, int densitySample, out int iteration, out float perPerc)
+        {
+            iteration = (int)((radius / densitySample) * (degree / 360));
+            if (iteration < densitySample * 4) iteration = (int)(densitySample * 4); // min iteration
+
+            perPerc = 1f / iteration;
+        }
+
+        static Vector3 GetAngleDirectionByPerc(float perc, Vector3 forward, Vector3 up, float degree = 360)
+        {
+            Quaternion rot = Quaternion.AngleAxis(perc * degree, up);
+            return (rot * forward);
+        }
     }
-}
-
-void GetCircleIteration(float sample, float radius, float degree, out int iteration, out float perPerc)
-{
-    iteration = (int)((radius / sample) * (degree / 360));
-    if (iteration < sample * 4) iteration = (int)(sample * 4); // min iteration
-
-    perPerc = 1f / iteration;
-}
-
-Vector3 GetAngleDirectionByPerc(float perc,Vector3 forward, Vector3 up, float degree = 360)
-{
-    Quaternion rot = Quaternion.AngleAxis(perc * degree, up);
-    return (rot * forward);
-}
