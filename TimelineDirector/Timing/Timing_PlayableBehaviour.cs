@@ -6,6 +6,7 @@ using UnityEngine.Timeline;
 public class Timing_PlayableBehaviour : PlayableBehaviour
 {
     public double courtesyTimePerc;
+    public bool debug;
 
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
@@ -47,15 +48,16 @@ public class Timing_PlayableBehaviour : PlayableBehaviour
 
     public virtual void ProcessEarly(Playable playable, FrameData info, object playerData)
     {
-        Debug.Log("early"); 
+  
+        if (debug) Debug.Log("early"); 
     }
     public virtual void ProcessCourtesyFrames(Playable playable, FrameData info, object playerData)
     {
-        Debug.Log("perfect");
+        if (debug) Debug.Log("perfect");
     }
     public virtual void ProcessLate(Playable playable, FrameData info, object playerData)
     {
-        Debug.Log("late");
+        if (debug) Debug.Log("late");
     }
 
  
