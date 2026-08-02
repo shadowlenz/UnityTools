@@ -1,11 +1,7 @@
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Timeline;
-using UnityEngine;
-using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
-[CanEditMultipleObjects]
 [CustomTimelineEditor(typeof(Timing_PlayableAsset))]
 public class Timing_PlayableAsset_Editor : ClipEditor
 {

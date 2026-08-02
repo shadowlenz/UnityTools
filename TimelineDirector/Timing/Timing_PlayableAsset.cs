@@ -1,16 +1,12 @@
-
-using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.Timeline;
-
 
 public class Timing_PlayableAsset : PlayableAsset
 {
-
+    //courtesyTime
     [Range(0,1)] [SerializeField]  double courtesyTimePerc = 0.5f;
     public double GetCourtesyTimePerc() => courtesyTimePerc;
-
+    //debug
     [SerializeField]  bool debug;
     public bool IsDebug() => debug && Application.isEditor;
 
